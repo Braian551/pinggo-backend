@@ -1,4 +1,5 @@
 <?php
+// Fixed: Removed BOM encoding issue
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

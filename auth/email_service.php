@@ -3,7 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 // Incluir configuración
-require_once 'config/config.php';
+require_once '../config/config.php';
 
 try {
     // Obtener datos del request

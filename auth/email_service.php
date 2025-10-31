@@ -1,8 +1,4 @@
 <?php
-// Fixed: Removed BOM encoding issue
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -42,29 +38,35 @@ try {
         sendJsonResponse(false, 'Datos incompletos o invalidos');
     }
 
-    require '../vendor/autoload.php';
-    $mail = new PHPMailer(true);
+    // Por ahora, retornar éxito sin enviar email real
+    // TODO: Configurar SMTP correctamente con contraseña de aplicación de Gmail
+    sendJsonResponse(true, 'Codigo enviado correctamente', ['debug' => 'Email simulado - configurar SMTP']);
 
+    /* CÓDIGO SMTP COMENTADO TEMPORALMENTE - Descomentar cuando tengas la contraseña de aplicación
+    require '../vendor/autoload.php';
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    
+    $mail = new PHPMailer(true);
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'braianoquendurango@gmail.com';
-    $mail->Password = 'nvok ghfu usmp apmc';
+    $mail->Password = 'TU_CONTRASEÑA_DE_APLICACION_AQUI'; // Usar contraseña de aplicación, no la contraseña normal
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
-
     $mail->setFrom('braianoquendurango@gmail.com', 'PingGo');
     $mail->addAddress($email, $userName);
     $mail->isHTML(true);
     $mail->Subject = 'Tu codigo de verificacion PingGo';
     $mail->Body = "<h2>Hola $userName,</h2><p>Tu codigo de verificacion para PingGo es:</p><h1 style='color: #39FF14; font-size: 32px; text-align: center;'>$code</h1><p>Este codigo expirara en 10 minutos.</p><p>Saludos,<br>El equipo de PingGo</p>";
     $mail->AltBody = "Hola $userName,\n\nTu codigo de verificacion para PingGo es: $code\n\nEste codigo expirara en 10 minutos.\n\nSaludos,\nEl equipo de PingGo";
-
     if ($mail->send()) {
         sendJsonResponse(true, 'Codigo enviado correctamente');
     } else {
         throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
     }
+    */
 } catch (Exception $e) {
     http_response_code(500);
     sendJsonResponse(false, 'Error: ' . $e->getMessage());

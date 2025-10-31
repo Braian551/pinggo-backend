@@ -54,14 +54,15 @@ try {
         throw new Exception("PHPMailer no está disponible");
     }
 
+    // MODO PRUEBAS: Simular envío exitoso para testing
+    // En producción, descomenta las líneas de PHPMailer abajo
+    error_log("Email simulation - To: $email, Code: $code, User: $userName");
+    sendJsonResponse(true, 'Codigo enviado correctamente (modo pruebas)');
+
+    /*
+    // CONFIGURACIÓN REAL PARA PRODUCCIÓN:
     $mail = new PHPMailer(true);
 
-    // CONFIGURACIÓN PARA GMAIL
-    // IMPORTANTE: Gmail bloquea conexiones desde servidores en la nube
-    // Para que funcione, necesitas:
-    // 1. Activar autenticación de 2 factores en tu cuenta Gmail
-    // 2. Generar una "contraseña de aplicación" en Google Account Settings
-    // 3. Usar esa contraseña (no tu contraseña normal)
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
@@ -82,6 +83,7 @@ try {
     } else {
         throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
     }
+    */
 
 } catch (Exception $e) {
     error_log("Email service error: " . $e->getMessage());

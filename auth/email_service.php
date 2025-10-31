@@ -56,16 +56,21 @@ try {
 
     $mail = new PHPMailer(true);
 
-    // Configuración para SendGrid (reemplaza con tus credenciales)
+    // CONFIGURACIÓN PARA GMAIL
+    // IMPORTANTE: Gmail bloquea conexiones desde servidores en la nube
+    // Para que funcione, necesitas:
+    // 1. Activar autenticación de 2 factores en tu cuenta Gmail
+    // 2. Generar una "contraseña de aplicación" en Google Account Settings
+    // 3. Usar esa contraseña (no tu contraseña normal)
     $mail->isSMTP();
-    $mail->Host = 'smtp.sendgrid.net';
+    $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'apikey'; // SendGrid usa 'apikey' como username
-    $mail->Password = 'TU_SENDGRID_API_KEY_AQUI'; // Reemplaza con tu API key real
+    $mail->Username = 'braianoquendurango@gmail.com';
+    $mail->Password = 'nvok ghfu usmp apmc';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
-    $mail->setFrom('noreply@pinggo.com', 'PingGo');
+    $mail->setFrom('braianoquendurango@gmail.com', 'PingGo');
     $mail->addAddress($email, $userName);
     $mail->isHTML(true);
     $mail->Subject = 'Tu codigo de verificacion PingGo';

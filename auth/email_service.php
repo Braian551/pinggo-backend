@@ -41,7 +41,19 @@ try {
         sendJsonResponse(false, 'Datos incompletos o invalidos');
     }
 
-    require '../vendor/autoload.php';
+    // Verificar que las dependencias estén disponibles
+    $vendorPath = __DIR__ . '/../vendor/autoload.php';
+    if (!file_exists($vendorPath)) {
+        throw new Exception("Dependencias no encontradas. Vendor path: $vendorPath");
+    }
+
+    require $vendorPath;
+
+    // Verificar que PHPMailer esté disponible
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        throw new Exception("PHPMailer no está disponible");
+    }
+
     $mail = new PHPMailer(true);
 
     $mail->isSMTP();

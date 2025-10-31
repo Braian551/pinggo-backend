@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql
 
-# Habilitar mod_rewrite para Apache
-RUN a2enmod rewrite
+# Habilitar módulos de Apache necesarios
+RUN a2enmod rewrite headers
 
 # Copiar archivos del proyecto
 COPY . /var/www/html/

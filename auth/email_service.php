@@ -41,46 +41,21 @@ try {
         sendJsonResponse(false, 'Datos incompletos o invalidos');
     }
 
-    // Verificar que las dependencias estén disponibles
-    $vendorPath = __DIR__ . '/../vendor/autoload.php';
-    if (!file_exists($vendorPath)) {
-        throw new Exception("Dependencias no encontradas. Vendor path: $vendorPath");
-    }
+    // Usar la función mail() de PHP como alternativa más confiable
+    $subject = 'Tu codigo de verificacion PingGo';
+    $message = "Hola $userName,\n\nTu codigo de verificacion para PingGo es: $code\n\nEste codigo expirara en 10 minutos.\n\nSaludos,\nEl equipo de PingGo";
 
-    require $vendorPath;
+    $headers = [
+        'From: PingGo <noreply@pinggo.com>',
+        'Reply-To: support@pinggo.com',
+        'X-Mailer: PHP/' . phpversion(),
+        'Content-Type: text/plain; charset=UTF-8'
+    ];
 
-    // Verificar que PHPMailer esté disponible
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        throw new Exception("PHPMailer no está disponible");
-    }
-
-    $mail = new PHPMailer(true);
-
-    // Configuración SMTP básica para debugging
-    $mail->SMTPDebug = 2; // Habilitar debugging detallado
-    $mail->Debugoutput = function($str, $level) {
-        error_log("PHPMailer Debug [$level]: $str");
-    };
-
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'braianoquendurango@gmail.com';
-    $mail->Password = 'nvok ghfu usmp apmc'; // Usar contraseña de aplicación, no la contraseña normal
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
-
-    $mail->setFrom('braianoquendurango@gmail.com', 'PingGo');
-    $mail->addAddress($email, $userName);
-    $mail->isHTML(true);
-    $mail->Subject = 'Tu codigo de verificacion PingGo';
-    $mail->Body = "<h2>Hola $userName,</h2><p>Tu codigo de verificacion para PingGo es:</p><h1 style='color: #39FF14; font-size: 32px; text-align: center;'>$code</h1><p>Este codigo expirara en 10 minutos.</p><p>Saludos,<br>El equipo de PingGo</p>";
-    $mail->AltBody = "Hola $userName,\n\nTu codigo de verificacion para PingGo es: $code\n\nEste codigo expirara en 10 minutos.\n\nSaludos,\nEl equipo de PingGo";
-
-    if ($mail->send()) {
+    if (mail($email, $subject, $message, implode("\r\n", $headers))) {
         sendJsonResponse(true, 'Codigo enviado correctamente');
     } else {
-        throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
+        throw new Exception("Error al enviar email usando mail()");
     }
 
 } catch (Exception $e) {

@@ -1,5 +1,8 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT');
@@ -38,19 +41,42 @@ try {
         sendJsonResponse(false, 'Datos incompletos o invalidos');
     }
 
-    // Registrar la información del email (para desarrollo/producción)
-    $logMessage = sprintf(
-        "Email verification code request - Email: %s, Code: %s, User: %s, Time: %s",
-        $email,
-        $code,
-        $userName,
-        date('Y-m-d H:i:s')
-    );
-    error_log($logMessage);
+    // Verificar que las dependencias estén disponibles
+    $vendorPath = __DIR__ . '/../vendor/autoload.php';
+    if (!file_exists($vendorPath)) {
+        throw new Exception("Dependencias no encontradas. Vendor path: $vendorPath");
+    }
 
-    // En un entorno de producción, aquí se enviaría el email real
-    // Por ahora, simulamos éxito para que la aplicación funcione
-    sendJsonResponse(true, 'Codigo enviado correctamente');
+    require $vendorPath;
+
+    // Verificar que PHPMailer esté disponible
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        throw new Exception("PHPMailer no está disponible");
+    }
+
+    $mail = new PHPMailer(true);
+
+    // Configuración para SendGrid (reemplaza con tus credenciales)
+    $mail->isSMTP();
+    $mail->Host = 'smtp.sendgrid.net';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'apikey'; // SendGrid usa 'apikey' como username
+    $mail->Password = 'TU_SENDGRID_API_KEY_AQUI'; // Reemplaza con tu API key real
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+
+    $mail->setFrom('noreply@pinggo.com', 'PingGo');
+    $mail->addAddress($email, $userName);
+    $mail->isHTML(true);
+    $mail->Subject = 'Tu codigo de verificacion PingGo';
+    $mail->Body = "<h2>Hola $userName,</h2><p>Tu codigo de verificacion para PingGo es:</p><h1 style='color: #39FF14; font-size: 32px; text-align: center;'>$code</h1><p>Este codigo expirara en 10 minutos.</p><p>Saludos,<br>El equipo de PingGo</p>";
+    $mail->AltBody = "Hola $userName,\n\nTu codigo de verificacion para PingGo es: $code\n\nEste codigo expirara en 10 minutos.\n\nSaludos,\nEl equipo de PingGo";
+
+    if ($mail->send()) {
+        sendJsonResponse(true, 'Codigo enviado correctamente');
+    } else {
+        throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
+    }
 
 } catch (Exception $e) {
     error_log("Email service error: " . $e->getMessage());

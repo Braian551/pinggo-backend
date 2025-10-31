@@ -1,11 +1,8 @@
 <?php
 
-<<<<<<< Updated upstream
-=======
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
->>>>>>> Stashed changes
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT');
@@ -44,22 +41,9 @@ try {
         sendJsonResponse(false, 'Datos incompletos o invalidos');
     }
 
-<<<<<<< Updated upstream
-    // Por ahora, retornar éxito sin enviar email real
-    // TODO: Configurar SMTP correctamente con contraseña de aplicación de Gmail
-    sendJsonResponse(true, 'Codigo enviado correctamente', ['debug' => 'Email simulado - configurar SMTP']);
-
-   
-    require '../vendor/autoload.php';
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
-    
-    $mail = new PHPMailer(true);
-=======
     require '../vendor/autoload.php';
     $mail = new PHPMailer(true);
 
->>>>>>> Stashed changes
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
@@ -67,26 +51,20 @@ try {
     $mail->Password = 'nvok ghfu usmp apmc'; // Usar contraseña de aplicación, no la contraseña normal
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     $mail->setFrom('braianoquendurango@gmail.com', 'PingGo');
     $mail->addAddress($email, $userName);
     $mail->isHTML(true);
     $mail->Subject = 'Tu codigo de verificacion PingGo';
     $mail->Body = "<h2>Hola $userName,</h2><p>Tu codigo de verificacion para PingGo es:</p><h1 style='color: #39FF14; font-size: 32px; text-align: center;'>$code</h1><p>Este codigo expirara en 10 minutos.</p><p>Saludos,<br>El equipo de PingGo</p>";
     $mail->AltBody = "Hola $userName,\n\nTu codigo de verificacion para PingGo es: $code\n\nEste codigo expirara en 10 minutos.\n\nSaludos,\nEl equipo de PingGo";
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     if ($mail->send()) {
         sendJsonResponse(true, 'Codigo enviado correctamente');
     } else {
         throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
     }
-    
+
 } catch (Exception $e) {
     http_response_code(500);
     sendJsonResponse(false, 'Error: ' . $e->getMessage());

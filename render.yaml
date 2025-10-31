@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pinggo-backend
+    env: php
+    buildCommand: composer install --no-dev --optimize-autoloader && mkdir -p logs uploads && chmod 755 logs uploads
+    startCommand: php -S 0.0.0.0:$PORT -t .
+    healthCheckPath: /
+    envVars:
+      - key: PHP_VERSION
+        value: "8.3"

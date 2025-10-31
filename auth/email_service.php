@@ -42,7 +42,7 @@ try {
     // TODO: Configurar SMTP correctamente con contraseña de aplicación de Gmail
     sendJsonResponse(true, 'Codigo enviado correctamente', ['debug' => 'Email simulado - configurar SMTP']);
 
-    /* CÓDIGO SMTP COMENTADO TEMPORALMENTE - Descomentar cuando tengas la contraseña de aplicación
+   
     require '../vendor/autoload.php';
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
@@ -52,7 +52,7 @@ try {
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'braianoquendurango@gmail.com';
-    $mail->Password = 'TU_CONTRASEÑA_DE_APLICACION_AQUI'; // Usar contraseña de aplicación, no la contraseña normal
+    $mail->Password = 'nvok ghfu usmp apmc'; // Usar contraseña de aplicación, no la contraseña normal
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
     $mail->setFrom('braianoquendurango@gmail.com', 'PingGo');
@@ -66,7 +66,7 @@ try {
     } else {
         throw new Exception("Error al enviar email: " . $mail->ErrorInfo);
     }
-    */
+    
 } catch (Exception $e) {
     http_response_code(500);
     sendJsonResponse(false, 'Error: ' . $e->getMessage());

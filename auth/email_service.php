@@ -56,6 +56,12 @@ try {
 
     $mail = new PHPMailer(true);
 
+    // Configuración SMTP básica para debugging
+    $mail->SMTPDebug = 2; // Habilitar debugging detallado
+    $mail->Debugoutput = function($str, $level) {
+        error_log("PHPMailer Debug [$level]: $str");
+    };
+
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
@@ -78,6 +84,7 @@ try {
     }
 
 } catch (Exception $e) {
+    error_log("Email service error: " . $e->getMessage());
     http_response_code(500);
     sendJsonResponse(false, 'Error: ' . $e->getMessage());
 }
